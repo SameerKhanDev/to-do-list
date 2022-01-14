@@ -2,20 +2,27 @@ import './App.css';
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Form,Button} from "react-bootstrap";
+import ToDoItem from './components/ToDoItem';
 class App extends React.Component {
   state = {
     inputVal: "",
 
-    //pull toDoTasks from backend
     toDoTasks: [],
 
-    //pull completedTasks from backend
+   
     completedTasks: []
 
   };
 
+  componentDidMount(){
+
+    //pull toDoTasks and completedTasks from backend
+
+  }
+
+
+  // used as inline function
   onCreateTask = () =>{
-    alert(this.state.inputVal);
     var arr = this.state.toDoTasks.concat(this.state.inputVal);
     this.setState({toDoTasks: arr});
 
@@ -23,7 +30,7 @@ class App extends React.Component {
 
   renderToDoItems(){
     return this.state.toDoTasks.map(task =>{
-      return <h2>{task}</h2>
+      return <ToDoItem task={task}></ToDoItem>
     });
   }
 

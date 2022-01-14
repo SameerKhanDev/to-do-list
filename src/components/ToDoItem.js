@@ -1,15 +1,16 @@
 import React from "react";
-import {Form,Button} from "react-bootstrap";
+import {Form,Button, Container, Row, Col} from "react-bootstrap";
 class ToDoItem extends React.Component{
 
     render() {
         return (
-            <Form>
-     <div>
-              <h3></h3>
-             <Button variant="secondary">Done</Button>
-        </div>
-          </Form>
+            <Container>
+            <Row>
+              <Col><h3>{this.props.task}</h3></Col>
+             <Col><Button variant="success">Done</Button></Col>
+             </Row>
+            </Container>
+          
         )
     }
 
