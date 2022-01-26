@@ -7,7 +7,7 @@ class ToDoItem extends React.Component{
             <Container>
             <Row>
               <Col><h3>{this.props.task}</h3></Col>
-             <Col><Button variant="success">Done</Button></Col>
+             <Col><Button variant="success" onClick={() => this.props.onCompleteTask(this.props.task)}>Done</Button></Col>
              </Row>
             </Container>
           
