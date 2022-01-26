@@ -3,13 +3,10 @@ const app = express(); //Line 2
 const port = process.env.PORT || 5000; //Line 3
 var bodyParser = require('body-parser')
 var counter = 0;
-
 const path = require('path');
-app.use(express.static(path.join(__dirname, '../src/')));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../src/index.js'));
-});
+const buildPath = path.join(__dirname, '..', 'build');
+app.use(express.static(buildPath));
 
 var jsonParser = bodyParser.json()
 // This displays message that the server running and listening to specified port
