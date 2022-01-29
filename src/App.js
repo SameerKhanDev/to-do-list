@@ -7,8 +7,6 @@ import CompletedItem from './components/CompletedItem';
 class App extends React.Component {
   state = {
 
-    data:null,
-
     inputVal: "",
 
     toDoTasks: [],
@@ -21,14 +19,15 @@ class App extends React.Component {
   componentDidMount(){
 
     //pull toDoTasks and completedTasks from backend
-    this.callBackendAPI()
-    .then(res => this.setState({ data: res.express }))
+    this.getTasks()
+    .then(res => this.setState({ toDoTasks: res.toDoTasks, completedTasks: res.completedTasks}))
     .catch(err => console.log(err));
+
 
   }
 
-  callBackendAPI = async () => {
-    const response = await fetch('/express_backend');
+  getTasks = async () => {
+    const response = await fetch('/get-tasks');
     const body = await response.json();
 
     if (response.status !== 200) {
@@ -37,13 +36,28 @@ class App extends React.Component {
     return body;
   };
 
-  callBackendAPIPost = async (task) => {
+  postTasks = async (task) => {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: task})
+      body: JSON.stringify({ task: task})
   };
-    const response = await fetch('/express_backend_post', requestOptions);
+    const response = await fetch('/post-tasks', requestOptions);
+    const body = await response.json();
+
+    if (response.status !== 200) {
+      throw Error(body.message) 
+    }
+    return body;
+  };
+
+  postTasksCompleted = async (task, arr) => {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ task: task, newToDoArray:arr})
+  };
+    const response = await fetch('/post-tasks-completed', requestOptions);
     const body = await response.json();
 
     if (response.status !== 200) {
@@ -60,11 +74,11 @@ class App extends React.Component {
   // used as inline function
   onCreateTask = () =>{
     var arr = this.state.toDoTasks.concat(this.state.inputVal);
-    this.setState({toDoTasks: arr});
+    this.setState({toDoTasks: arr})
 
-    this.callBackendAPIPost(this.state.inputVal)
+    this.postTasks(this.state.inputVal)
     .then(res => console.log(res.json))
-    .catch(err => console.log(err));
+    .catch(err => console.log(err))
 
 
 
@@ -74,9 +88,13 @@ class App extends React.Component {
     var arr = this.state.completedTasks.concat(task);
     this.setState({completedTasks: arr});
 
-    var arr2 = this.state.toDoTasks;
-    arr2.splice(arr2.indexOf(task),1);
-    this.setState({toDoTasks:arr2});
+    var newToDoArray = this.state.toDoTasks;
+    newToDoArray.splice(newToDoArray.indexOf(task),1);
+    this.setState({toDoTasks:newToDoArray});
+
+    this.postTasksCompleted(task, newToDoArray)
+    .then(res => console.log(res.json))
+    .catch(err => console.log(err))
   
   }
 
@@ -120,7 +138,6 @@ class App extends React.Component {
     <h2>Complete:</h2>
 
     <div>{this.renderCompletedItems()}</div>
-    <div>{this.state.data}</div>
 
     </div>
   );
